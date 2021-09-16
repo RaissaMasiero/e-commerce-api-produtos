@@ -28,13 +28,15 @@ public interface CategoriaRepresentation {
         private Long id;
         private String descricao;
         private Categoria.Status status;
+
+        static Detail from(Categoria categoria){
+            return Detail.builder()
+                    .id(categoria.getId())
+                    .descricao(categoria.getDescricao())
+                    .status(categoria.getStatus())
+                    .build();
+        }
     }
 
-    static Detail from(Categoria categoria){
-        return Detail.builder()
-                .id(categoria.getId())
-                .descricao(categoria.getDescricao())
-                .status(categoria.getStatus())
-                .build();
-    }
+
 }
