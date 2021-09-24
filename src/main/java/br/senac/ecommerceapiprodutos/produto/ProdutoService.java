@@ -16,23 +16,20 @@ import java.util.List;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
-    private final CategoriaService categoriaService;
 
-    public Produto salvar(ProdutoRepresentation.CreateOrUpdateProduto createOrUpdateProduto){
-
-        Categoria categoria = this.categoriaService.getCategoria(createOrUpdateProduto.getCategoria());
+    public Produto salvar(ProdutoRepresentation.CreateOrUpdateProduto createOrUpdateProduto, Categoria categoria){
 
         Produto produto = Produto.builder()
                 .nome(createOrUpdateProduto.getNome())
                 .descricao(createOrUpdateProduto.getDescricao())
-                .complemento(createOrUpdateProduto.getComplemento())
+                .complemento(Strings.isEmpty(createOrUpdateProduto.getComplemento()) ? "" : createOrUpdateProduto.getComplemento())
+                .fabricante(createOrUpdateProduto.getFabricante())
+                .fornecedor(Strings.isEmpty(createOrUpdateProduto.getFornecedor()) ? "" : createOrUpdateProduto.getFornecedor())
+                .qtde(createOrUpdateProduto.getQtde())
                 .valor(createOrUpdateProduto.getValor())
                 .unidadeMedida(createOrUpdateProduto.getUnidadeMedida())
-                .qtde(createOrUpdateProduto.getQtde())
-                .fabricante(createOrUpdateProduto.getFabricante())
-                .fornecedor(Strings.isEmpty(createOrUpdateProduto.getFornecedor())? "" : createOrUpdateProduto.getFornecedor())
-                .status(Produto.Status.ATIVO)
                 .categoria(categoria)
+                .status(Produto.Status.ATIVO)
                 .build();
 
         return this.produtoRepository.save(produto);
@@ -44,8 +41,9 @@ public class ProdutoService {
 
     public Produto buscarUm(Long id){
         BooleanExpression filter = QProduto.produto.id.eq(id)
-                .and(Produto.produto.status.eq(Produto.Status.ATIVO));
-        return this.produtoRepository.findOne(filter).orElseThrow(() -> new NotFoundException("Produto não encontrado."));
+                .and(QProduto.produto.status.eq(Produto.Status.ATIVO));
+        return this.produtoRepository.findOne(filter)
+                .orElseThrow(() -> new NotFoundException("Produto não encontrado."));
     }
 
     public void deleteCategoria(Long id){
@@ -54,24 +52,23 @@ public class ProdutoService {
         this.produtoRepository.save(produto);
     }
 
-    public Produto atualizar(Long id, ProdutoRepresentation.CreateOrUpdateProduto createOrUpdateProduto){
+    /*public Produto atualizar(Long id, ProdutoRepresentation.CreateOrUpdateProduto createOrUpdateProduto){
         Produto produtoAntigo = this.buscarUm(id);
 
         Categoria categoria = this.categoriaService.getCategoria(createOrUpdateProduto.getCategoria());
 
-        Produto produtoAtualizado = Produto.toBuilder()
+        Produto produtoAtualizado = produtoAntigo.toBuilder()
                 .nome(createOrUpdateProduto.getNome())
                 .descricao(createOrUpdateProduto.getDescricao())
-                .complemento(createOrUpdateProduto.getComplemento())
+                .complemento(Strings.isEmpty(createOrUpdateProduto.getComplemento()) ? "" : createOrUpdateProduto.getComplemento())
+                .fabricante(createOrUpdateProduto.getFabricante())
+                .fornecedor(Strings.isEmpty(createOrUpdateProduto.getFornecedor()) ? "" : createOrUpdateProduto.getFornecedor())
+                .qtde(createOrUpdateProduto.getQtde())
                 .valor(createOrUpdateProduto.getValor())
                 .unidadeMedida(createOrUpdateProduto.getUnidadeMedida())
-                .qtde(createOrUpdateProduto.getQtde())
-                .fabricante(createOrUpdateProduto.getFabricante())
-                .fornecedor(Strings.isEmpty(createOrUpdateProduto.getFornecedor())? "" : createOrUpdateProduto.getFornecedor())
-                .status(Produto.Status.ATIVO)
                 .categoria(categoria)
                 .build();
 
         return this.produtoRepository.save(produtoAtualizado);
-    }
+    } */
 }

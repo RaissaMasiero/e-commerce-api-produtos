@@ -1,15 +1,11 @@
 package br.senac.ecommerceapiprodutos.produto;
 
-import br.senac.ecommerceapiprodutos.categoria.Categoria;
+import br.senac.ecommerceapiprodutos.categoria.CategoriaRepresentation;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -31,15 +27,12 @@ public interface ProdutoRepresentation {
         private String complemento;
 
         @NotNull(message = "O campo valor não pode ser nulo")
-        @NotEmpty(message = "O campo valor não pode ser vazio")
         private Double valor;
 
         @NotNull(message = "O campo unidade de medida não pode ser nulo")
-        @NotEmpty(message = "O campo unidade de medida não pode ser vazio")
         private Produto.UnidadeMedida unidadeMedida;
 
         @NotNull(message = "O campo quantidade não pode ser nulo")
-        @NotEmpty(message = "O campo quantidade não pode ser vazio")
         private Double qtde;
 
         @NotNull(message = "O campo fabricante não pode ser nulo")
@@ -50,5 +43,36 @@ public interface ProdutoRepresentation {
 
         @NotNull(message = "A categoria é obrigatória")
         private Long categoria;
+    }
+
+    @Data
+    @Getter
+    @Setter
+    @Builder
+    class Detalhes {
+
+        private String nome;
+        private String descricao;
+        private String complemento;
+        private Double valor;
+        private Produto.UnidadeMedida unidadeMedida;
+        private Double qtde;
+        private String fabricante;
+        private String fornecedor;
+        private CategoriaRepresentation.Detail categoria;
+
+        public static Detalhes from(Produto produto){
+            return Detalhes.builder()
+                    .nome(produto.getNome())
+                    .descricao(produto.getDescricao())
+                    .complemento(produto.getComplemento())
+                    .valor(produto.getValor())
+                    .unidadeMedida(produto.getUnidadeMedida())
+                    .qtde(produto.getQtde())
+                    .fabricante(produto.getFabricante())
+                    .fornecedor(produto.getFornecedor())
+                    .categoria(CategoriaRepresentation.Detail.from(produto.getCategoria()))
+                    .build();
+        }
     }
 }
