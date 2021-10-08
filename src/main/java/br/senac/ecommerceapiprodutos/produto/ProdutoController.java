@@ -29,9 +29,9 @@ public class ProdutoController {
                 .body(ProdutoRepresentation.Detalhes.from(this.produtoService.salvar(createOrUpdateProduto, categoria)));
     }
 
-    @DeleteMapping("/{id}")
+    /*@DeleteMapping("/{id}")
     public ResponseEntity deleteProduto(@PathVariable("id") Long id){
         this.categoriaService.deleteCategoria(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+    }*/
 }
