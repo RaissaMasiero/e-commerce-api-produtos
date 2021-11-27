@@ -1,27 +1,31 @@
 package br.senac.ecommerceapiprodutos.produto;
 
+import br.senac.ecommerceapiprodutos.categoria.Categoria;
 import br.senac.ecommerceapiprodutos.categoria.CategoriaRepresentation;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public interface ProdutoRepresentation {
 
     @Data
     @Getter
     @Setter
-    class CreateOrUpdateProduto{
+    class CreateOrUpdate {
 
         @NotNull(message = "O campo nome não pode ser nulo")
-        @Size(min = 1, max = 30, message = "O campo nome deve conter entre 1 e 30")
+        @Size(min = 1, max = 30, message = "O campo nome deve conter entre 1 e 30 caracteres")
         private String nome;
 
-        @NotNull(message = "O campo descrição não pode ser nulo")
-        @Size(max = 30, min = 1, message = "A descrição deve conter de 1 a 30 caracteres")
+        @NotNull(message = "O campo descricao não pode ser nulo")
+        @Size(min = 1, max = 255, message = "O campo descrição deve conter entre 1 e 255 caracteres")
         private String descricao;
 
         private String complemento;
@@ -36,7 +40,7 @@ public interface ProdutoRepresentation {
         private Double qtde;
 
         @NotNull(message = "O campo fabricante não pode ser nulo")
-        @Size(max = 255, min = 1, message = "A descrição deve conter de 1 a 255 caracteres")
+        @Size(min = 1, max = 255, message = "O campo fabricante deve conter entre 1 e 255 caracteres")
         private String fabricante;
 
         private String fornecedor;
@@ -51,6 +55,7 @@ public interface ProdutoRepresentation {
     @Builder
     class Detalhes {
 
+        private Long id;
         private String nome;
         private String descricao;
         private String complemento;
@@ -61,8 +66,9 @@ public interface ProdutoRepresentation {
         private String fornecedor;
         private CategoriaRepresentation.Detail categoria;
 
-        public static Detalhes from(Produto produto){
+        public static Detalhes from(Produto produto) {
             return Detalhes.builder()
+                    .id(produto.getId())
                     .nome(produto.getNome())
                     .descricao(produto.getDescricao())
                     .complemento(produto.getComplemento())
@@ -73,6 +79,10 @@ public interface ProdutoRepresentation {
                     .fornecedor(produto.getFornecedor())
                     .categoria(CategoriaRepresentation.Detail.from(produto.getCategoria()))
                     .build();
+        }
+
+        public static List<Detalhes> from(List<Produto> produtos) {
+            return produtos.stream().map(Detalhes::from).collect(Collectors.toList());
         }
     }
 }

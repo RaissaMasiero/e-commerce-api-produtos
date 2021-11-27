@@ -1,6 +1,7 @@
 package br.senac.ecommerceapiprodutos.categoria;
 
 import br.senac.ecommerceapiprodutos.exceptions.NotFoundException;
+import br.senac.ecommerceapiprodutos.produto.ProdutoService;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.AllArgsConstructor;
