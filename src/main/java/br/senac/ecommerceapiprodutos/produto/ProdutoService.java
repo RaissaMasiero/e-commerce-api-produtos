@@ -18,23 +18,24 @@ import java.util.List;
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
-    private final CategoriaService categoriaService;
+    // private final CategoriaService categoriaService;
 
     public Produto salvar(ProdutoRepresentation.CreateOrUpdate createOrUpdate,
                           Categoria categoria) {
 
-        categoria = this.categoriaService.getCategoria(createOrUpdate.getCategoria());
+        //categoria = this.categoriaService.getCategoria(createOrUpdate.getCategoria());
 
         Produto produto = Produto.builder()
                 .nome(createOrUpdate.getNome())
                 .descricao(createOrUpdate.getDescricao())
-                .complemento(createOrUpdate.getComplemento())
+                .complemento(Strings.isEmpty(createOrUpdate.getComplemento()) ? "" : createOrUpdate.getComplemento())
+                .fabricante(createOrUpdate.getFabricante())
+                .fornecedor(Strings.isEmpty(createOrUpdate.getFornecedor()) ? "" : createOrUpdate.getFornecedor())
+                .qtde(createOrUpdate.getQtde())
                 .valor(createOrUpdate.getValor())
                 .unidadeMedida(createOrUpdate.getUnidadeMedida())
-                .qtde(createOrUpdate.getQtde())
-                .fabricante(createOrUpdate.getFabricante())
-                .fornecedor(createOrUpdate.getFornecedor())
                 .categoria(categoria)
+                .status(Produto.Status.ATIVO)
                 .build();
 
         return this.produtoRepository.save(produto);
@@ -43,17 +44,17 @@ public class ProdutoService {
     public Produto atualizar(Long id, ProdutoRepresentation.CreateOrUpdate createOrUpdate, Categoria categoria) {
 
         Produto produtoAntigo = this.buscarUm(id);
-        categoria = this.categoriaService.getCategoria(createOrUpdate.getCategoria());
+        //categoria = this.categoriaService.getCategoria(createOrUpdate.getCategoria());
 
         Produto produtoAtualizado = produtoAntigo.toBuilder()
                 .nome(createOrUpdate.getNome())
                 .descricao(createOrUpdate.getDescricao())
-                .complemento(createOrUpdate.getComplemento())
+                .complemento(Strings.isEmpty(createOrUpdate.getComplemento()) ? "" : createOrUpdate.getComplemento())
+                .fabricante(createOrUpdate.getFabricante())
+                .fornecedor(Strings.isEmpty(createOrUpdate.getFornecedor()) ? "" : createOrUpdate.getFornecedor())
+                .qtde(createOrUpdate.getQtde())
                 .valor(createOrUpdate.getValor())
                 .unidadeMedida(createOrUpdate.getUnidadeMedida())
-                .qtde(createOrUpdate.getQtde())
-                .fabricante(createOrUpdate.getFabricante())
-                .fornecedor(createOrUpdate.getFornecedor())
                 .categoria(categoria)
                 .build();
 
